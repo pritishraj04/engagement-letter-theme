@@ -41,7 +41,7 @@ export default function InvitationExperience() {
           <div className="absolute inset-0 bg-linear-to-br from-[#BF953F] via-[#FCF6BA] to-[#AA771C]" />
 
           {/* INNER CREAM GRADIENT LAYER */}
-          <div className="absolute inset-[6px] md:inset-3 bg-linear-to-b from-[#F1EEE5] via-[#E5DDCC] to-[#D5C4A9] shadow-inner overflow-hidden">
+          <div className="absolute inset-[6px] md:inset-3 bg-linear-to-b from-[#F1EEE5] via-[#E5DDCC] to-[#bfa375] shadow-inner overflow-hidden">
             {/* PAPER TEXTURE OVERLAY */}
             <Image
               src="/assets/images/paper-texture.png"
@@ -57,17 +57,17 @@ export default function InvitationExperience() {
               <div
                 className="flex flex-col items-center gap-3 transition-opacity duration-1000 ease-out"
               >
-                <span className="font-script text-2xl md:text-3xl text-stone-600/80 italic">You are invited to our</span>
-                <div className="w-32 md:w-44 h-10 relative opacity-40">
+                <span className="font-script text-2xl md:text-3xl text-stone-600/80 italic">Save the Date</span>
+                <div className="w-[680px] md:w-[720px] h-20 md:h-32 relative">
                   <Image
-                    src="/assets/images/divider.png"
-                    alt="divider"
+                    src="/assets/images/ring-text.svg"
+                    alt="ring ceremony"
                     fill
-                    sizes="(max-width: 768px) 128px, 176px"
+                    sizes="(max-width: 768px) 680px, 720px"
                     className="object-contain"
+                    priority
                   />
                 </div>
-                <h2 className="font-headline text-xl md:text-2xl tracking-[0.2em] md:tracking-[0.4em] font-bold uppercase text-stone-700">Engagement Ceremony</h2>
               </div>
             </div>
 
@@ -152,7 +152,7 @@ export default function InvitationExperience() {
               </svg>
 
               {/* Stamp Detail */}
-              <div className="absolute right-6 top-16 opacity-90 scale-90 md:scale-100 -rotate-3">
+              {/* <div className="absolute right-6 top-16 opacity-90 scale-90 md:scale-100 -rotate-3">
                 <div className="w-16 h-20 bg-[#f9f9f9] border-[3px] border-dotted border-[#cfc8b9] p-1 shadow-sm flex flex-col items-center justify-center">
                   <span className="font-serif text-[10px] uppercase text-stone-500 tracking-wider text-center leading-tight">You Are<br />Invited</span>
                   <div className="w-8 h-8 mt-2 opacity-50">
@@ -163,7 +163,7 @@ export default function InvitationExperience() {
                     </svg>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* TOP FLAP Z-INDEX LAYER - Switches slowly behind letter when open */}
@@ -198,13 +198,13 @@ export default function InvitationExperience() {
 
             {/* SEAL AND CALL TO ACTION OVERLAY */}
             <div
-              className={`absolute left-1/2 top-[68%] z-40 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transition-all duration-700 ease-out ${stage === "opened" ? "opacity-0 scale-75 blur-sm pointer-events-none" : "opacity-100 scale-100 blur-none"
+              className={`absolute left-1/2 top-[60%] z-40 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transition-all duration-700 ease-out ${stage === "opened" ? "opacity-0 scale-75 blur-sm pointer-events-none" : "opacity-100 scale-100 blur-none"
                 }`}
             >
               <button
                 onClick={handleSealClick}
                 onTouchEnd={handleSealClick}
-                className="relative flex items-center justify-center cursor-pointer pointer-events-auto w-30 h-30 md:w-36 md:h-36 rounded-full group outline-none focus-visible:ring-4 focus-visible:ring-[#BF953F]/20"
+                className="relative flex items-center justify-center cursor-pointer pointer-events-auto w-35 h-35 md:w-40 md:h-40 rounded-full group outline-none focus-visible:ring-4 focus-visible:ring-[#BF953F]/20"
                 style={{ WebkitTapHighlightColor: "transparent" }}
               >
                 {/* Minimal Royal Aura */}
@@ -235,12 +235,26 @@ export default function InvitationExperience() {
                 )}
               </button>
 
-              {/* Instructions - Positioned fixed below the seal button original center */}
+              {/* Circular Instruction Text */}
               <div
-                className={`mt-6 bg-black/40 backdrop-blur-sm text-stone-200 px-5 py-2 rounded-full text-xs uppercase tracking-[0.2em] font-medium border border-white/10 whitespace-nowrap transition-opacity duration-1000 ${stage === "sealed" ? "opacity-100 delay-1000" : "opacity-0"
+                className={`absolute inset-[-10px] z-0 pointer-events-none transition-opacity duration-1000 ${stage === "sealed" ? "opacity-100 delay-1000" : "opacity-0"
                   }`}
               >
-                Press here to open the envelope
+                <svg viewBox="0 0 200 200" className="w-full h-full animate-spin-slow origin-center">
+                  <path
+                    id="circlePath"
+                    d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"
+                    fill="none"
+                  />
+                  <text className="fill-stone-500/60 text-[10px] font-bold uppercase tracking-[0.25em]">
+                    <textPath href="#circlePath" startOffset="5%">
+                      • Tap to open the envelope •
+                    </textPath>
+                    <textPath href="#circlePath" startOffset="55%">
+                      • Tap to open the envelope •
+                    </textPath>
+                  </text>
+                </svg>
               </div>
             </div>
 

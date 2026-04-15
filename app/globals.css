@@ -16,6 +16,7 @@
   --animate-royal-glow: royal-glow 6s ease-in-out infinite;
   --animate-glint: glint 8s ease-in-out infinite;
   --animate-float: float 8s ease-in-out infinite;
+  --animate-spin-slow: spin 15s linear infinite;
 
   @keyframes royal-glow {
     0%, 100% { transform: scale(1); opacity: 0.1; filter: blur(12px); }
