@@ -53,17 +53,41 @@ export default function InvitationExperience() {
             />
 
             {/* HEADER TEXT ABOVE ENVELOPE */}
-            <div className="absolute top-[38dvh] left-1/2 -translate-x-1/2 w-full flex flex-col items-center gap-4 text-center z-10 pointer-events-none">
+            <div className="absolute top-[20dvh] md:top-[30dvh] left-1/2 -translate-x-1/2 w-full flex flex-col items-center gap-4 text-center z-10 pointer-events-none">
               <div
-                className="flex flex-col items-center gap-3 transition-opacity duration-1000 ease-out"
+                className="flex flex-col items-center gap-4 transition-opacity duration-1000 ease-out"
               >
-                <span className="font-script text-2xl md:text-3xl text-stone-600/80 italic">Save the Date</span>
-                <div className="w-[680px] md:w-[720px] h-20 md:h-32 relative">
+                {/* 1. GANESH ICON */}
+                <div className="w-16 h-16 md:w-20 md:h-20 relative">
                   <Image
-                    src="/assets/images/ring-text.svg"
-                    alt="ring ceremony"
+                    src="/assets/images/ganesh.svg"
+                    alt="Ganesh"
                     fill
-                    sizes="(max-width: 768px) 680px, 720px"
+                    sizes="(max-width: 768px) 64px, 80px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+
+                {/* 2. SAVE THE DATE TEXT */}
+                <div className="w-25 md:w-35 h-12 md:h-20 relative">
+                  <Image
+                    src="/assets/images/save-the-date.svg"
+                    alt="Save the Date"
+                    fill
+                    sizes="(max-width: 768px) 60vw, 400px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+
+                {/* 3. RING CEREMONY TEXT */}
+                <div className="w-[400px] md:w-[720px] h-16 md:h-28 relative">
+                  <Image
+                    src="/assets/images/ring-ceremony.svg"
+                    alt="Ring Ceremony"
+                    fill
+                    sizes="(max-width: 768px) 90vw, 720px"
                     className="object-contain"
                     priority
                   />

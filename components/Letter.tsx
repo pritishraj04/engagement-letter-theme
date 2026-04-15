@@ -24,7 +24,7 @@ export default function Letter({ isOpen, className }: { isOpen: boolean, classNa
                 style={{ height: "90dvh" }}
             >
                 {/* Letter Pattern Background (Distinct from scene) */}
-                <div className="absolute inset-0 z-0 bg-[url('/assets/images/letter-bg.jpeg')] bg-cover bg-center bg-no-repeat opacity-60 mix-blend-multiply pointer-events-none" />
+                <div className="absolute inset-0 z-0 bg-[url('/assets/images/letter-bg5.jpg')] bg-cover bg-center bg-no-repeat pointer-events-none" />
 
                 {/* Scroll Cue */}
                 <div
@@ -40,21 +40,8 @@ export default function Letter({ isOpen, className }: { isOpen: boolean, classNa
                 <div className={`absolute inset-0 z-10 p-6 md:p-8 overflow-x-hidden scrollbar-hide ${isOpen ? 'overflow-y-auto' : 'overflow-y-hidden'}`}>
 
                     {/* Inner Content Box */}
-                    <div className="bg-white/95 backdrop-blur-sm min-h-full w-full shadow-sm relative flex flex-col items-center py-28 px-10 md:px-16 text-center border border-stone-200/50">
+                    <div className="min-h-full w-full relative flex flex-col items-center py-28 px-10 md:px-16 text-center">
 
-                        {/* Corner Ornaments */}
-                        <div className="absolute top-1 left-1 w-16 h-16 opacity-70 pointer-events-none">
-                            <img src="/assets/images/ornament.png" alt="Ornament" className="w-full h-full object-contain rotate-270" />
-                        </div>
-                        <div className="absolute top-1 right-1 w-16 h-16 opacity-70 pointer-events-none">
-                            <img src="/assets/images/ornament.png" alt="Ornament" className="w-full h-full object-contain" />
-                        </div>
-                        <div className="absolute bottom-1 left-1 w-16 h-16 opacity-70 pointer-events-none">
-                            <img src="/assets/images/ornament.png" alt="Ornament" className="w-full h-full object-contain rotate-180" />
-                        </div>
-                        <div className="absolute bottom-1 right-1 w-16 h-16 opacity-70 pointer-events-none">
-                            <img src="/assets/images/ornament.png" alt="Ornament" className="w-full h-full object-contain rotate-90" />
-                        </div>
 
                         <p className="font-serif text-stone-500 uppercase tracking-widest text-xs md:text-sm mb-6 mt-4">
                             Together with their families
