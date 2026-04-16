@@ -1,6 +1,37 @@
 import React, { useRef, useState, useEffect } from "react";
 import { MapPin, Calendar, Clock, ArrowRight, ChevronDown, GlassWater, Music } from "lucide-react";
 
+const ScallopedFrame = ({
+    insetClass,
+    borderColor,
+    bgColor,
+    wClass, hClass,
+    xClass, yClass
+}: {
+    insetClass: string, borderColor: string, bgColor: string,
+    wClass: string, hClass: string, xClass: string, yClass: string
+}) => (
+    <div className={`absolute ${insetClass} pointer-events-none z-0`}>
+        {/* Top line */}
+        <div className={`absolute top-0 ${xClass} h-px ${bgColor}`} />
+        {/* Bottom line */}
+        <div className={`absolute bottom-0 ${xClass} h-px ${bgColor}`} />
+        {/* Left line */}
+        <div className={`absolute ${yClass} left-0 w-px ${bgColor}`} />
+        {/* Right line */}
+        <div className={`absolute ${yClass} right-0 w-px ${bgColor}`} />
+
+        {/* Corner TL */}
+        <div className={`absolute top-0 left-0 ${wClass} ${hClass} border-r border-b rounded-br-full ${borderColor}`} />
+        {/* Corner TR */}
+        <div className={`absolute top-0 right-0 ${wClass} ${hClass} border-l border-b rounded-bl-full ${borderColor}`} />
+        {/* Corner BL */}
+        <div className={`absolute bottom-0 left-0 ${wClass} ${hClass} border-r border-t rounded-tr-full ${borderColor}`} />
+        {/* Corner BR */}
+        <div className={`absolute bottom-0 right-0 ${wClass} ${hClass} border-l border-t rounded-tl-full ${borderColor}`} />
+    </div>
+);
+
 export default function Letter({ isOpen, onClose, className }: { isOpen: boolean, onClose?: () => void, className?: string }) {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -12,18 +43,18 @@ export default function Letter({ isOpen, onClose, className }: { isOpen: boolean
     const themeConfig: string = 'dark';
 
     const t = {
-        bg: themeConfig === 'light' ? 'bg-[#FFFDF9]' : 'bg-[#0A1128]',
+        bg: themeConfig === 'light' ? 'bg-[#FFFDF9]' : 'bg-[#560000]',
         textMain: themeConfig === 'light' ? 'text-stone-800' : 'text-[#F3E8D6]',
         textMuted: themeConfig === 'light' ? 'text-stone-600' : 'text-[#C6A869]/80',
         textLight: themeConfig === 'light' ? 'text-stone-500' : 'text-[#C6A869]/60',
         textAccent: themeConfig === 'light' ? 'text-stone-400' : 'text-[#C6A869]',
         border: themeConfig === 'light' ? 'border-stone-200/60' : 'border-[#C6A869]/30',
-        btnSolid: themeConfig === 'light' ? 'bg-stone-900 text-stone-100 hover:bg-stone-800' : 'bg-[#C6A869] text-[#0A1128] hover:bg-[#D4B981]',
+        btnSolid: themeConfig === 'light' ? 'bg-stone-900 text-stone-100 hover:bg-stone-800' : 'bg-[#C6A869] text-[#560000] hover:bg-[#D4B981]',
         btnOutline: themeConfig === 'light' ? 'border-stone-300 bg-transparent text-stone-700 hover:bg-stone-100' : 'border-[#C6A869]/50 bg-transparent text-[#C6A869] hover:bg-[#C6A869]/10',
         card: themeConfig === 'light' ? 'border-stone-300/50 bg-stone-50/50' : 'border-[#C6A869]/20 bg-[#C6A869]/5',
         lineBreak: themeConfig === 'light' ? 'opacity-60 invert-0' : 'opacity-80 invert brightness-150',
         sealOrbit: themeConfig === 'light' ? 'fill-stone-600/80' : 'fill-[#C6A869]/90',
-        navBtnBg: themeConfig === 'light' ? 'bg-white/80 border-stone-200/50 hover:bg-white' : 'bg-[#0A1128]/80 border-[#C6A869]/30 hover:bg-[#0A1128]',
+        navBtnBg: themeConfig === 'light' ? 'bg-white/80 border-stone-200/50 hover:bg-white' : 'bg-[#560000]/80 border-[#C6A869]/30 hover:bg-[#560000]',
         navBtnText: themeConfig === 'light' ? 'text-stone-600' : 'text-[#F3E8D6]',
         navBtnIcon: themeConfig === 'light' ? 'text-stone-500' : 'text-[#C6A869]',
     };
@@ -85,9 +116,23 @@ export default function Letter({ isOpen, onClose, className }: { isOpen: boolean
                 {/* STATIC BACKGROUND & FRAME EXPERIMENT */}
                 <div className={`sticky top-0 left-0 w-full h-[90dvh] z-0 pointer-events-none overflow-hidden ${t.bg}`}>
                     {/* Inner Gold Frame */}
-                    <div className="absolute inset-4 md:inset-6 border border-[#C6A869]/50 pointer-events-none rounded-sm" />
+                    <ScallopedFrame
+                        insetClass="inset-4 md:inset-6"
+                        borderColor="border-[#C6A869]/50"
+                        bgColor="bg-[#C6A869]/50"
+                        wClass="w-12 md:w-16" hClass="h-12 md:h-16"
+                        xClass="left-12 right-12 md:left-16 md:right-16"
+                        yClass="top-12 bottom-12 md:top-16 md:bottom-16"
+                    />
                     {/* Secondary inset line for a classic double-border effect */}
-                    <div className="absolute inset-[22px] md:inset-[30px] border border-[#C6A869]/20 pointer-events-none rounded-sm" />
+                    <ScallopedFrame
+                        insetClass="inset-[22px] md:inset-[30px]"
+                        borderColor="border-[#C6A869]/20"
+                        bgColor="bg-[#C6A869]/20"
+                        wClass="w-8 md:w-12" hClass="h-8 md:h-12"
+                        xClass="left-8 right-8 md:left-12 md:right-12"
+                        yClass="top-8 bottom-8 md:top-12 md:bottom-12"
+                    />
                 </div>
 
                 {/* FIXED CONTENT WRAPPER */}
@@ -236,10 +281,10 @@ export default function Letter({ isOpen, onClose, className }: { isOpen: boolean
 
                 {/* SCROLL TRACKS */}
                 <div className="w-full -mt-[90dvh] pointer-events-none">
-                    <div className="w-full h-[90dvh] snap-start" />
-                    <div className="w-full h-[90dvh] snap-start" />
-                    <div className="w-full h-[90dvh] snap-start" />
-                    <div className="w-full h-[90dvh] snap-start" />
+                    <div className="w-full h-[90dvh] snap-start snap-always" />
+                    <div className="w-full h-[90dvh] snap-start snap-always" />
+                    <div className="w-full h-[90dvh] snap-start snap-always" />
+                    <div className="w-full h-[90dvh] snap-start snap-always" />
                 </div>
 
             </div>
