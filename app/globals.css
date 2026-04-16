@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-bodoni);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
   --font-script: var(--font-script);
   --font-headline: var(--font-headline);
 

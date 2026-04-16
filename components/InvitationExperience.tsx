@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import Image from "next/image";
 import Letter from "./Letter";
 
-export default function InvitationExperience() {
+export default function InvitationExperience({ weddingData }: { weddingData?: any }) {
   const [stage, setStage] = useState<"sealed" | "zoomed" | "opened" | "closing_letter" | "closing_flap">("sealed");
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -168,6 +168,7 @@ export default function InvitationExperience() {
               <Letter
                 isOpen={stage === "opened"}
                 onClose={handleClose}
+                weddingData={weddingData}
                 className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
               />
             </div>

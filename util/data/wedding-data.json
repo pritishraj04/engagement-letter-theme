@@ -1,0 +1,52 @@
+{
+    "eventType": "Engagement",
+    "couple": {
+        "groom": {
+            "name": "Pritish",
+            "parents": {
+                "mother": "",
+                "father": ""
+            }
+        },
+        "bride": {
+            "name": "Simran",
+            "parents": {
+                "mother": "",
+                "father": ""
+            }
+        },
+        "hashtag": ""
+    },
+    "wedding": {
+        "date": "2026-05-06T19:00:00",
+        "displayDate": "MAY 6th, 2026"
+    },
+    "celebrations": [
+        {
+            "name": "Ring Ceremony",
+            "date": "May 6, 2026",
+            "time": "01:00 PM",
+            "venue": "KL7 Hotel & Banquets, Raja Ghat, near Gai Ghat, Patna, Bihar",
+            "googleMapsUrl": "https://maps.app.goo.gl/pHykwsk274WMGmvW8",
+            "showLocation": true,
+            "mapImage": "assets/images/map.jpeg",
+            "dressCode": "Occasion Ready",
+            "highlight": true,
+            "calendarUrl": "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pritish+%26+Simran+-+Ring+Ceremony&dates=20260506T130000/20260506T140000&details=Engagement+Ceremony&location=KL7+Hotel+%26+Banquets,+Raja+Ghat,+Patna&ctz=Asia/Kolkata"
+        }
+    ],
+    "contact": {
+        "whatsapp": "919097785207",
+        "instagram": ""
+    },
+    "messages": {
+        "inviteText": "With immense joy and heartfelt happiness, we, as a family, request the honor of your presence at the engagement of Pritish and Simran. As they begin a beautiful journey, we would be delighted to have you join us in celebrating this special occasion and blessing the couple for a lifetime of happiness.",
+        "thankYou": "Ready. Set. Glow! Thank you for being part of our journey.",
+        "coupleQuote": ""
+    },
+    "music": {
+        "url": "assets/music/music.mp3",
+        "autoplay": true
+    },
+    "websiteUrl": "https://pritishsimranengaged.netlify.app/"
+}
