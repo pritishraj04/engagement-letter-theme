@@ -5,7 +5,7 @@ import Image from "next/image";
 import Letter from "./Letter";
 
 export default function InvitationExperience() {
-  const [stage, setStage] = useState<"sealed" | "zoomed" | "opened">("sealed");
+  const [stage, setStage] = useState<"sealed" | "zoomed" | "opened" | "closing_letter" | "closing_flap">("sealed");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const ZOOM_SCALE = 1.05;
@@ -24,6 +24,26 @@ export default function InvitationExperience() {
     }
   };
 
+  const handleClose = () => {
+    if (stage === "opened") {
+      setStage("closing_letter");
+      // Wait for letter to drop into envelope
+      setTimeout(() => {
+        setStage("closing_flap");
+        // Wait for flap to close
+        setTimeout(() => {
+          setStage("sealed");
+        }, 1500);
+      }, 1500);
+    }
+  };
+
+  const isZoomed = stage !== "sealed";
+  const isFlapOpen = stage === "opened" || stage === "closing_letter";
+  const areFoldsDown = stage === "opened" || stage === "closing_letter";
+  const isLetterVisible = stage === "opened";
+  const isSealHidden = stage === "opened" || stage === "closing_letter" || stage === "closing_flap";
+
   return (
     <>
       <div
@@ -34,7 +54,7 @@ export default function InvitationExperience() {
         <div
           className="absolute inset-0 pointer-events-none origin-bottom overflow-hidden shadow-2xl transition-transform duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
           style={{
-            transform: `scale(${stage === "sealed" ? 1 : ZOOM_SCALE}) translateY(${stage === "opened" ? "2%" : "0%"})`
+            transform: `scale(${isZoomed ? ZOOM_SCALE : 1}) translateY(${isLetterVisible ? "2%" : "0%"})`
           }}
         >
           {/* GOLD GRADIENT BORDER BASE */}
@@ -124,7 +144,7 @@ export default function InvitationExperience() {
         <div
           className="relative z-10 w-full max-w-2xl px-4 pb-12 flex flex-col items-center justify-end origin-bottom transition-transform duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
           style={{
-            transform: `scale(${stage === "sealed" ? 1 : ZOOM_SCALE}) translateY(${stage === "sealed" ? "0%" : "15%"})`
+            transform: `scale(${isZoomed ? ZOOM_SCALE : 1}) translateY(${isZoomed ? "15%" : "0%"})`
           }}
         >
           {/* The Envelope */}
@@ -134,8 +154,8 @@ export default function InvitationExperience() {
             <div
               className="absolute inset-x-0 bottom-0 top-[20%] bg-[#d1cbbd] drop-shadow-inner border border-black/10 rounded-b-md transition-all duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
               style={{
-                transform: `translateY(${stage === "opened" ? "50vh" : "0%"})`,
-                opacity: stage === "opened" ? 0 : 1,
+                transform: `translateY(${areFoldsDown ? "50vh" : "0%"})`,
+                opacity: areFoldsDown ? 0 : 1,
                 transitionDelay: stage === "opened" ? '1500ms' : '0ms'
               }}
             />
@@ -147,6 +167,7 @@ export default function InvitationExperience() {
             >
               <Letter
                 isOpen={stage === "opened"}
+                onClose={handleClose}
                 className="absolute bottom-2 left-1/2 -translate-x-1/2 transition-all duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
               />
             </div>
@@ -155,8 +176,8 @@ export default function InvitationExperience() {
             <div
               className="absolute inset-x-0 bottom-0 top-[20%] z-20 pointer-events-none transition-all duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
               style={{
-                transform: `translateY(${stage === "opened" ? "50vh" : "0%"})`,
-                opacity: stage === "opened" ? 0 : 1,
+                transform: `translateY(${areFoldsDown ? "50vh" : "0%"})`,
+                opacity: areFoldsDown ? 0 : 1,
                 transitionDelay: stage === "opened" ? '1500ms' : '0ms'
               }}
             >
@@ -201,8 +222,8 @@ export default function InvitationExperience() {
               <div
                 className="w-full h-full transition-all duration-1500 ease-[cubic-bezier(0.25,1,0.5,1)]"
                 style={{
-                  transform: `translateY(${stage === "opened" ? "50vh" : "0%"})`,
-                  opacity: stage === "opened" ? 0 : 1,
+                  transform: `translateY(${areFoldsDown ? "50vh" : "0%"})`,
+                  opacity: areFoldsDown ? 0 : 1,
                   transitionDelay: stage === "opened" ? '1500ms' : '0ms'
                 }}
               >
@@ -210,7 +231,7 @@ export default function InvitationExperience() {
                 <div
                   className="w-full h-full origin-top transition-transform duration-1200 ease-in-out"
                   style={{
-                    transform: `rotateX(${stage === "opened" ? 180 : 0}deg)`
+                    transform: `rotateX(${isFlapOpen ? 180 : 0}deg)`
                   }}
                 >
                   <svg viewBox="0 0 800 400" className="w-full h-full drop-shadow-xl" preserveAspectRatio="none">
@@ -222,7 +243,7 @@ export default function InvitationExperience() {
 
             {/* SEAL AND CALL TO ACTION OVERLAY */}
             <div
-              className={`absolute left-1/2 top-[60%] z-40 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transition-all duration-700 ease-out ${stage === "opened" ? "opacity-0 scale-75 blur-sm pointer-events-none" : "opacity-100 scale-100 blur-none"
+              className={`absolute left-1/2 top-[60%] z-40 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transition-all duration-700 ease-out ${isSealHidden ? "opacity-0 scale-75 blur-sm pointer-events-none" : "opacity-100 scale-100 blur-none"
                 }`}
             >
               <button
