@@ -31,8 +31,7 @@
             "showLocation": true,
             "mapImage": "assets/images/map.jpeg",
             "dressCode": "Occasion Ready",
-            "highlight": true,
-            "calendarUrl": "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pritish+%26+Simran+-+Ring+Ceremony&dates=20260506T130000/20260506T140000&details=Engagement+Ceremony&location=KL7+Hotel+%26+Banquets,+Raja+Ghat,+Patna&ctz=Asia/Kolkata"
+            "highlight": true
         }
     ],
     "contact": {

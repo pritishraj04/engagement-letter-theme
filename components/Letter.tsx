@@ -156,12 +156,34 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
 
         let dates = "";
         try {
-            const d = new Date(`${celebration.date} ${celebration.time}`);
-            if (!isNaN(d.getTime())) {
-                const pad = (n: number) => n.toString().padStart(2, '0');
-                const format = (date: Date) => `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}00Z`;
-                const end = new Date(d.getTime() + 4 * 60 * 60 * 1000); // Add 4 hours
-                dates = `&dates=${format(d)}/${format(end)}`;
+            // Manual parsing to avoid Server UTC timezone hydration mismatches
+            const dStr = celebration.date; // "May 6, 2026"
+            const tStr = celebration.time; // "01:00 PM"
+            const months: Record<string, string> = { "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04", "May": "05", "Jun": "06", "Jul": "07", "Aug": "08", "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12" };
+
+            const mMatch = dStr.match(/([a-zA-Z]+) (\d+), (\d+)/);
+            const tMatch = tStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+
+            if (mMatch && tMatch) {
+                const month = months[mMatch[1].substring(0, 3)] || "05";
+                const day = mMatch[2].padStart(2, '0');
+                const year = mMatch[3];
+
+                let hour12 = parseInt(tMatch[1], 10);
+                const min = tMatch[2];
+                const ampm = tMatch[3].toUpperCase();
+
+                if (ampm === "PM" && hour12 < 12) hour12 += 12;
+                if (ampm === "AM" && hour12 === 12) hour12 = 0;
+
+                const startHour = hour12.toString().padStart(2, '0');
+                const endHour = ((hour12 + 4) % 24).toString().padStart(2, '0');
+
+                // Format: 20260506T130000 (No Z character, meaning it is local to ctz)
+                const dateStrStart = `${year}${month}${day}T${startHour}${min}00`;
+                const dateStrEnd = `${year}${month}${day}T${endHour}${min}00`;
+
+                dates = `&dates=${dateStrStart}/${dateStrEnd}&ctz=Asia/Kolkata`;
             }
         } catch (e) { }
 
@@ -292,7 +314,7 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                             <div className="flex flex-col items-center gap-1.5">
                                 <Calendar className={`w-4 h-4 md:w-5 md:h-5 ${t.textAccent}`} strokeWidth={1.5} />
                                 <div className={`font-sans font-light tracking-widest text-xs md:text-sm ${t.textMuted}`}>
-                                    <span className={`font-serif uppercase tracking-widest text-xs md:text-sm ${t.textMain}`}>{weddingData?.celebrations?.[0]?.date || "Saturday, September 24th"}</span><br />
+                                    <span className={`font-serif uppercase tracking-widest text-base md:text-lg font-bold ${t.textMain}`}>{weddingData?.celebrations?.[0]?.date || "Saturday, September 24th"}</span><br />
                                     {weddingData?.celebrations?.[0]?.time || "Two Thousand and Twenty-Six"}
                                 </div>
                                 <a
@@ -308,7 +330,7 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                             <div className="flex flex-col items-center gap-1.5">
                                 <MapPin className={`w-4 h-4 md:w-5 md:h-5 ${t.textAccent}`} strokeWidth={1.5} />
                                 <div className={`font-sans font-light tracking-wide text-xs md:text-sm ${t.textMuted}`}>
-                                    <span className={`font-serif uppercase tracking-widest text-xs md:text-sm ${t.textMain}`}>{weddingData?.celebrations?.[0]?.venue?.split(',')[0] || "The Conservatory"}</span><br />
+                                    <span className={`font-serif uppercase tracking-widest text-base md:text-lg font-bold ${t.textMain}`}>{weddingData?.celebrations?.[0]?.venue?.split(',')[0] || "The Conservatory"}</span><br />
                                     {weddingData?.celebrations?.[0]?.venue?.split(',').slice(1).join(',').trim() || "123 Botanical Garden Way"}
                                 </div>
                                 {weddingData?.celebrations?.[0]?.googleMapsUrl && (
@@ -360,16 +382,38 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                         </div>
                     </div>
 
-                    {/* SECTION 3: RSVP */}
+                    {/* SECTION 3: CONTACT & SIGN OFF */}
                     <div className={`absolute inset-0 pt-16 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out ${activeIndex === 3 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
-                        <h2 className={`font-script text-5xl md:text-6xl mb-4 drop-shadow-sm ${t.textMain}`}>RSVP</h2>
-                        <p className={`font-sans font-light text-xs md:text-base tracking-wide leading-relaxed max-w-[280px] md:max-w-xs mb-6 ${t.textMuted}`}>
-                            {weddingData?.messages?.thankYou || "Your presence is the greatest gift of all. Please let us know if you'll be able to celebrate with us."}
+                        <h2 className={`font-script text-5xl md:text-6xl mb-6 drop-shadow-sm ${t.textAccent}`}>Reach Out</h2>
+                        <p className={`font-sans font-light text-xs md:text-base tracking-wide leading-relaxed max-w-[280px] md:max-w-xs mb-8 ${t.textMuted}`}>
+                            For any queries regarding the celebrations or venue directions, please feel free to reach out to us.
                         </p>
 
-                        <div className="flex flex-col w-full max-w-sm gap-4 mb-20 md:mb-16">
-                            {weddingData && <RSVPForm weddingData={weddingData} />}
+                        <div className={`p-6 w-full max-w-sm rounded-sm ${t.card} mb-8`}>
+                            <h4 className={`text-[10px] md:text-xs font-sans font-bold uppercase tracking-[0.2em] mb-5 ${t.textMain}`}>Contact Details</h4>
+
+                            {weddingData?.contact?.phone ? (
+                                <div className="space-y-5">
+                                    {weddingData.contact.phone.map((ph: any, i: number) => (
+                                        <div key={i} className={`font-serif text-sm tracking-widest ${t.textMuted}`}>
+                                            <span className={`font-sans font-bold ${t.textMain} text-[10px] md:text-xs tracking-wider uppercase`}>{ph.name}</span><br />
+                                            <a href={`tel:${ph.number}`} className="underline decoration-1 underline-offset-4 hover:opacity-70 transition-opacity mt-1 inline-block">
+                                                {ph.number}
+                                            </a>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className={`font-serif text-sm tracking-widest ${t.textMuted}`}>
+                                    <span className={`font-sans font-bold ${t.textMain} text-[10px] tracking-wider uppercase`}>Pritish</span><br />
+                                    <a href="tel:+919097785207" className="underline decoration-1 underline-offset-4 hover:opacity-70 transition-opacity mt-1 inline-block">
+                                        +91 9097 785 207
+                                    </a>
+                                </div>
+                            )}
                         </div>
+
+                        <h3 className={`font-script text-5xl md:text-6xl mt-4 ${t.textMain}`}>See you there</h3>
 
                         {/* HALF SEAL FOR CLOSING */}
                         <div className="absolute bottom-[-30px] md:bottom-[-40px] left-1/2 -translate-x-1/2 z-50">
