@@ -250,7 +250,7 @@ export default function InvitationExperience({ weddingData }: { weddingData?: an
               <button
                 onClick={handleSealClick}
                 onTouchEnd={handleSealClick}
-                className="relative flex items-center justify-center cursor-pointer pointer-events-auto w-35 h-35 md:w-40 md:h-40 rounded-full group outline-none focus-visible:ring-4 focus-visible:ring-[#BF953F]/20"
+                className={`relative flex items-center justify-center cursor-pointer w-35 h-35 md:w-40 md:h-40 rounded-full group outline-none focus-visible:ring-4 focus-visible:ring-[#BF953F]/20 ${isSealHidden ? 'pointer-events-none' : 'pointer-events-auto'}`}
                 style={{ WebkitTapHighlightColor: "transparent" }}
               >
                 {/* Minimal Royal Aura */}
@@ -277,27 +277,27 @@ export default function InvitationExperience({ weddingData }: { weddingData?: an
 
                 {/* Subtle outer gold ring */}
                 {stage === "sealed" && (
-                  <div className="absolute inset-0 -z-5 rounded-full border border-[#BF953F]/10 scale-105" />
+                  <div className="absolute inset-0 -z-5 rounded-full border border-[#BF953F]/20 pointer-events-none transition-all duration-1000 scale-100" />
                 )}
               </button>
 
               {/* Circular Instruction Text */}
               <div
-                className={`absolute inset-[-10px] z-0 pointer-events-none transition-opacity duration-1000 ${stage === "sealed" ? "opacity-100 delay-1000" : "opacity-0"
+                className={`absolute inset-0  z-0 pointer-events-none transition-opacity duration-1000 ${stage === "sealed" ? "opacity-100 delay-1000" : "opacity-0"
                   }`}
               >
-                <svg viewBox="0 0 200 200" className="w-full h-full animate-spin-slow origin-center">
+                <svg viewBox="0 0 200 200" className="w-full h-full animate-spin-slow origin-center overflow-visible">
                   <path
                     id="circlePath"
-                    d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"
+                    d="M 100, 100 m -85, 0 a 85,85 0 1,1 170,0 a 85,85 0 1,1 -170,0"
                     fill="none"
                   />
-                  <text className="fill-stone-500/60 text-[10px] font-bold uppercase tracking-[0.25em]">
-                    <textPath href="#circlePath" startOffset="5%">
-                      • Tap to open the envelope •
+                  <text className="fill-stone-500/60 text-xs font-bold uppercase tracking-[0.2em] pointer-events-none">
+                    <textPath href="#circlePath" startOffset="25%" textAnchor="middle">
+                      • Tap here to open •
                     </textPath>
-                    <textPath href="#circlePath" startOffset="55%">
-                      • Tap to open the envelope •
+                    <textPath href="#circlePath" startOffset="75%" textAnchor="middle">
+                      • Tap here to open •
                     </textPath>
                   </text>
                 </svg>

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { MapPin, Calendar, Clock, ArrowRight, ChevronDown, GlassWater, Music } from "lucide-react";
+import { MapPin, Calendar, ChevronDown } from "lucide-react";
 import RSVPForm from "./features/RSVPForm";
 
 const FlowerAnimations = () => (
@@ -148,6 +148,26 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
     const groomFirstName = weddingData?.couple?.groom?.name?.split(' ')[0] || 'William';
     const brideFirstName = weddingData?.couple?.bride?.name?.split(' ')[0] || 'Josephine';
 
+    const generateCalendarLink = (celebration: any) => {
+        if (!celebration) return "#";
+        const title = encodeURIComponent(`${groomFirstName} & ${brideFirstName}'s Engagement`);
+        const details = encodeURIComponent("We are so excited to celebrate with you!");
+        const location = encodeURIComponent(celebration.venue || "");
+
+        let dates = "";
+        try {
+            const d = new Date(`${celebration.date} ${celebration.time}`);
+            if (!isNaN(d.getTime())) {
+                const pad = (n: number) => n.toString().padStart(2, '0');
+                const format = (date: Date) => `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}00Z`;
+                const end = new Date(d.getTime() + 4 * 60 * 60 * 1000); // Add 4 hours
+                dates = `&dates=${format(d)}/${format(end)}`;
+            }
+        } catch (e) { }
+
+        return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}${dates}&details=${details}&location=${location}`;
+    };
+
     // Wait for the envelope to physically open before showing the first text
     useEffect(() => {
         if (isOpen) {
@@ -241,12 +261,12 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                 <div className="sticky top-0 left-0 w-full h-[90dvh] z-10 flex flex-col items-center justify-center p-6 md:p-8 -mt-[90dvh]">
 
                     {/* SECTION 0: THE INTRO */}
-                    <div className={`absolute inset-0 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out 
+                    <div className={`absolute inset-0 pt-16 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out 
                         ${activeIndex === 0
                             ? (isUnfolded ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-8 pointer-events-none")
                             : "opacity-0 -translate-y-8 pointer-events-none"}`}
                     >
-                        <p className={`font-serif uppercase tracking-[0.25em] text-[10px] md:text-xs mb-8 ${t.textLight}`}>
+                        <p className={`font-serif uppercase tracking-[0.25em] text-xs md:text-sm mb-8 ${t.textLight}`}>
                             Please join us
                         </p>
                         <h1 className={`font-script text-6xl md:text-7xl lg:text-8xl leading-[0.8] mb-8 drop-shadow-sm ${t.textMain}`}>
@@ -254,32 +274,41 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                             <span className={`text-4xl md:text-5xl my-4 block font-serif ${t.textAccent}`}>&amp;</span>
                             {brideFirstName}
                         </h1>
-                        <p className={`font-sans font-light tracking-wide text-xs md:text-sm leading-relaxed max-w-[280px] md:max-w-sm ${t.textMuted}`}>
+                        <p className={`font-sans font-light tracking-wide text-sm md:text-base leading-relaxed max-w-[280px] md:max-w-sm ${t.textMuted}`}>
                             for the celebration of our engagement and the beginning of our new chapter together.
                         </p>
                     </div>
 
                     {/* SECTION 1: THE DETAILS */}
-                    <div className={`absolute inset-0 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out ${activeIndex === 1 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
-                        <div className={`w-full h-4 bg-[url('/assets/images/line-break.png')] bg-contain bg-center bg-no-repeat mb-10 ${t.lineBreak}`} />
+                    <div className={`absolute inset-0 pt-10 pb-16 flex flex-col items-center justify-center text-center px-6 transition-all duration-1000 ease-out ${activeIndex === 1 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
+                        <div className={`w-full h-4 bg-[url('/assets/images/line-break.png')] bg-contain bg-center bg-no-repeat mb-4 ${t.lineBreak}`} />
 
-                        <p className={`font-script text-4xl md:text-5xl mb-4 ${t.textAccent}`}>When & Where</p>
-                        <p className={`font-sans font-light text-xs md:text-sm tracking-wide max-w-xs mb-10 ${t.textMuted}`}>
+                        <p className={`font-script text-4xl md:text-5xl mb-2 ${t.textAccent}`}>When & Where</p>
+                        <p className={`font-sans font-light text-xs md:text-sm tracking-wide max-w-xs mb-4 ${t.textMuted}`}>
                             We cannot wait to share this beautiful evening with our closest friends and family.
                         </p>
 
-                        <div className="space-y-8">
-                            <div className="flex flex-col items-center gap-3">
-                                <Calendar className={`w-5 h-5 ${t.textAccent}`} strokeWidth={1.5} />
-                                <div className={`font-sans font-light tracking-widest ${t.textMuted}`}>
-                                    <span className={`font-serif uppercase tracking-widest text-sm ${t.textMain}`}>{weddingData?.celebrations?.[0]?.date || "Saturday, September 24th"}</span><br />
+                        <div className="flex flex-col gap-4 w-full">
+                            <div className="flex flex-col items-center gap-1.5">
+                                <Calendar className={`w-4 h-4 md:w-5 md:h-5 ${t.textAccent}`} strokeWidth={1.5} />
+                                <div className={`font-sans font-light tracking-widest text-xs md:text-sm ${t.textMuted}`}>
+                                    <span className={`font-serif uppercase tracking-widest text-xs md:text-sm ${t.textMain}`}>{weddingData?.celebrations?.[0]?.date || "Saturday, September 24th"}</span><br />
                                     {weddingData?.celebrations?.[0]?.time || "Two Thousand and Twenty-Six"}
                                 </div>
+                                <a
+                                    href={generateCalendarLink(weddingData?.celebrations?.[0])}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`mt-1.5 px-4 py-2 rounded-full text-[9px] md:text-xs uppercase tracking-[0.2em] font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${t.btnSolid} hover:scale-105`}
+                                >
+                                    <Calendar className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                                    Add to Calendar
+                                </a>
                             </div>
-                            <div className="flex flex-col items-center gap-3 mt-4">
-                                <MapPin className={`w-5 h-5 ${t.textAccent}`} strokeWidth={1.5} />
-                                <div className={`font-sans font-light tracking-wide ${t.textMuted}`}>
-                                    <span className={`font-serif uppercase tracking-widest text-sm ${t.textMain}`}>{weddingData?.celebrations?.[0]?.venue?.split(',')[0] || "The Conservatory"}</span><br />
+                            <div className="flex flex-col items-center gap-1.5">
+                                <MapPin className={`w-4 h-4 md:w-5 md:h-5 ${t.textAccent}`} strokeWidth={1.5} />
+                                <div className={`font-sans font-light tracking-wide text-xs md:text-sm ${t.textMuted}`}>
+                                    <span className={`font-serif uppercase tracking-widest text-xs md:text-sm ${t.textMain}`}>{weddingData?.celebrations?.[0]?.venue?.split(',')[0] || "The Conservatory"}</span><br />
                                     {weddingData?.celebrations?.[0]?.venue?.split(',').slice(1).join(',').trim() || "123 Botanical Garden Way"}
                                 </div>
                                 {weddingData?.celebrations?.[0]?.googleMapsUrl && (
@@ -287,63 +316,54 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                                         href={weddingData.celebrations[0].googleMapsUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className={`mt-2 px-5 py-2 border rounded-full text-[10px] uppercase tracking-[0.2em] font-medium transition-all ${t.btnOutline} hover:scale-105`}
+                                        className={`mt-1.5 px-4 py-2 rounded-full text-[9px] md:text-xs uppercase tracking-[0.2em] font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${t.btnSolid} hover:scale-105`}
                                     >
+                                        <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5" />
                                         Get Directions
                                     </a>
                                 )}
                             </div>
                         </div>
-                        <div className={`w-full h-4 bg-[url('/assets/images/line-break.png')] bg-contain bg-center bg-no-repeat mt-10 ${t.lineBreak}`} />
+                        <div className={`w-full h-4 bg-[url('/assets/images/line-break.png')] bg-contain bg-center bg-no-repeat mt-4 ${t.lineBreak}`} />
                     </div>
 
-                    {/* SECTION 2: ITINERARY & ATTIRE */}
-                    <div className={`absolute inset-0 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out ${activeIndex === 2 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
-                        <p className={`font-script text-4xl md:text-5xl mb-8 ${t.textAccent}`}>{weddingData?.eventType || 'Wedding'} Celebrations</p>
+                    {/* SECTION 2: THE CELEBRATION DETAILS */}
+                    <div className={`absolute inset-0 pt-10 pb-16 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out ${activeIndex === 2 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
+                        <p className={`font-script text-4xl md:text-5xl mb-4 ${t.textAccent}`}>The Celebration</p>
 
-                        <div className="space-y-6 max-w-sm w-full font-serif text-center">
-                            {weddingData?.celebrations?.map((celeb: any, i: number) => (
-                                <div key={i} className={`flex flex-col items-center gap-1 ${i < weddingData.celebrations.length - 1 ? `pb-5 border-b ${t.border}` : ''}`}>
-                                    <h3 className={`text-lg tracking-widest uppercase ${t.textMain}`}>{celeb.name}</h3>
-                                    <p className={`font-sans tracking-wide font-light text-sm ${t.textLight}`}>{celeb.time} • {celeb.date}</p>
-                                    <p className={`font-sans font-light text-[11px] mt-1 mb-1 ${t.textMuted} leading-tight`}>{celeb.venue}</p>
-                                    {celeb.googleMapsUrl && (
-                                        <a
-                                            href={celeb.googleMapsUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={`mt-1 px-4 py-1.5 border rounded-full text-[9px] uppercase tracking-[0.15em] font-medium transition-all ${t.btnOutline} hover:scale-105`}
-                                        >
-                                            View Map
-                                        </a>
-                                    )}
-                                </div>
-                            )) || (
-                                    <>
-                                        <div className={`flex flex-col items-center gap-2 pb-6 border-b ${t.border}`}>
-                                            <h3 className={`text-lg tracking-widest uppercase ${t.textMain}`}>Welcome Cocktails</h3>
-                                            <p className={`font-sans tracking-wide font-light text-sm ${t.textLight}`}>6:00 PM • The Garden Terrace</p>
-                                            <p className={`font-sans italic font-light text-xs mt-1 ${t.textMuted}`}>Join us for sunset drinks and light hors d'oeuvres.</p>
-                                        </div>
-                                        <div className="flex flex-col items-center gap-2">
-                                            <h3 className={`text-lg tracking-widest uppercase ${t.textMain}`}>Dinner & Dancing</h3>
-                                            <p className={`font-sans tracking-wide font-light text-sm ${t.textLight}`}>7:30 PM • The Glasshouse</p>
-                                            <p className={`font-sans italic font-light text-xs mt-1 ${t.textMuted}`}>A seated twilight dinner followed by live music.</p>
-                                        </div>
-                                    </>
-                                )}
+                        {/* Elegant Image Frame */}
+                        <div className={`relative w-40 h-40 md:w-56 md:h-56 mb-6 rounded-t-full overflow-hidden border-2 ${t.border} p-1 shadow-xl`}>
+                            <div className="relative w-full h-full rounded-t-full overflow-hidden">
+                                <img
+                                    src="/assets/images/engagement-rings.webp"
+                                    alt="Engagement Celebration"
+                                    className="object-cover w-full h-full object-center"
+                                />
+                                <div className="absolute inset-0 bg-[#6B0D1E]/10 mix-blend-overlay"></div>
+                            </div>
                         </div>
 
-                        <div className={`mt-8 p-4 w-full max-w-sm rounded-sm ${t.card}`}>
-                            <h4 className={`text-[10px] font-sans font-bold uppercase tracking-[0.2em] mb-1 ${t.textMain}`}>Attire</h4>
-                            <p className={`font-serif italic text-sm ${t.textMuted}`}>{weddingData?.celebrations?.[0]?.dressCode || "Black-Tie Inspired"}</p>
+                        <div className={`p-4 w-full max-w-sm rounded-sm ${t.card}`}>
+                            <div className="mb-3">
+                                <h4 className={`text-[10px] md:text-xs font-sans font-bold uppercase tracking-[0.2em] mb-1 ${t.textMain}`}>Dress Code</h4>
+                                <p className={`font-serif text-xs md:text-sm ${t.textMuted}`}>{weddingData?.celebrations?.[0]?.dressCode || "Black-Tie Optional"}</p>
+                            </div>
+
+                            <div className={`w-8 h-px mx-auto mb-3 ${t.border} border-t`}></div>
+
+                            <div>
+                                <h4 className={`text-[10px] md:text-xs font-sans font-bold uppercase tracking-[0.2em] mb-1.5 ${t.textMain}`}>Your Presence</h4>
+                                <p className={`font-sans font-light text-[10px] md:text-sm leading-relaxed ${t.textLight}`}>
+                                    Please bless us with your presence as we celebrate this beautiful new beginning. We look forward to sharing our joy with you.
+                                </p>
+                            </div>
                         </div>
                     </div>
 
                     {/* SECTION 3: RSVP */}
-                    <div className={`absolute inset-0 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out ${activeIndex === 3 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
-                        <h2 className={`font-script text-5xl md:text-6xl mb-6 drop-shadow-sm ${t.textMain}`}>RSVP</h2>
-                        <p className={`font-sans font-light text-xs md:text-sm tracking-wide leading-relaxed max-w-[280px] md:max-w-xs mb-8 ${t.textMuted}`}>
+                    <div className={`absolute inset-0 pt-16 flex flex-col items-center justify-center text-center px-10 transition-all duration-1000 ease-out ${activeIndex === 3 ? "opacity-100 translate-y-0 pointer-events-auto delay-200" : "opacity-0 translate-y-8 pointer-events-none"}`}>
+                        <h2 className={`font-script text-5xl md:text-6xl mb-4 drop-shadow-sm ${t.textMain}`}>RSVP</h2>
+                        <p className={`font-sans font-light text-xs md:text-base tracking-wide leading-relaxed max-w-[280px] md:max-w-xs mb-6 ${t.textMuted}`}>
                             {weddingData?.messages?.thankYou || "Your presence is the greatest gift of all. Please let us know if you'll be able to celebrate with us."}
                         </p>
 
@@ -357,27 +377,32 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
                                 onClick={onClose}
                                 className="relative flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-full group cursor-pointer hover:scale-[1.03] active:scale-[0.97] transition-all duration-300"
                             >
-                                <div className="absolute inset-x-[-15%] inset-y-[-15%] bg-[#BF953F]/10 rounded-full group-hover:bg-[#BF953F]/20 transition-colors pointer-events-none" />
+                                {/* Minimal Royal Aura */}
+
+                                <div className="absolute inset-x-[-5%] inset-y-[-5%] -z-10 bg-[#BF953F] rounded-full mix-blend-screen animate-royal-glow" />
+
+                                <div className="absolute inset-[-30px] md:inset-[-40px] -z-10 border border-[#BF953F]/20 rounded-full pointer-events-none" />
+
                                 <img
                                     src="/assets/images/seal.png"
                                     alt="Close Envelope"
-                                    className="w-full h-full object-contain pointer-events-none drop-shadow-md"
+                                    className="w-full h-full object-contain pointer-events-none drop-shadow-md z-10 relative"
                                 />
 
                                 {/* Circular Instruction Text */}
-                                <div className="absolute inset-[-15px] z-0 pointer-events-none transition-opacity duration-1000 opacity-70 group-hover:opacity-100">
-                                    <svg viewBox="0 0 200 200" className="w-full h-full animate-spin-slow origin-center">
+                                <div className="absolute inset-[-25px] md:inset-[-30px] z-0 pointer-events-none transition-opacity duration-1000 opacity-70 group-hover:opacity-100">
+                                    <svg viewBox="0 0 200 200" className="w-full h-full animate-spin-slow origin-center overflow-visible">
                                         <path
                                             id="closeCirclePath"
-                                            d="M 100, 100 m -80, 0 a 80,80 0 1,1 160,0 a 80,80 0 1,1 -160,0"
+                                            d="M 100, 100 m -85, 0 a 85,85 0 1,1 170,0 a 85,85 0 1,1 -170,0"
                                             fill="none"
                                         />
-                                        <text className={`text-[9px] font-bold uppercase tracking-[0.2em] ${t.sealOrbit}`}>
-                                            <textPath href="#closeCirclePath" startOffset="7%">
-                                                • Relive the experience •
+                                        <text className={`text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] pointer-events-none ${t.sealOrbit}`}>
+                                            <textPath href="#closeCirclePath" startOffset="25%" textAnchor="middle">
+                                                • Press here to reset •
                                             </textPath>
-                                            <textPath href="#closeCirclePath" startOffset="57%">
-                                                • Relive the experience •
+                                            <textPath href="#closeCirclePath" startOffset="75%" textAnchor="middle">
+                                                • Press here to reset •
                                             </textPath>
                                         </text>
                                     </svg>
@@ -388,17 +413,21 @@ export default function Letter({ isOpen, onClose, className, weddingData }: { is
 
                     {/* NAVIGATION BUTTON */}
                     {isOpen && (
-                        <div className="absolute bottom-6 left-0 w-full z-50 flex justify-center pointer-events-none">
-                            <div className={`transition-all duration-700 ${activeIndex === totalSections - 1 || !isUnfolded ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
+                        <div className="absolute bottom-8 left-0 w-full z-50 flex justify-center pointer-events-none">
+                            <div className={`transition-all duration-700 flex flex-col items-center ${activeIndex === totalSections - 1 || !isUnfolded ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0 pointer-events-auto'}`}>
                                 <button
                                     onClick={scrollToNext}
-                                    className={`flex flex-col items-center gap-2 group backdrop-blur-md px-6 py-3 rounded-full shadow-lg transition-all active:scale-95 ${t.navBtnBg} ${activeIndex === totalSections - 1 || !isUnfolded ? 'pointer-events-none' : 'pointer-events-auto'}`}
+                                    className={`flex flex-col items-center justify-center gap-2 group backdrop-blur-md px-6 py-3 rounded-full shadow-lg transition-all active:scale-95 ${t.navBtnBg} cursor-pointer select-none mb-2`}
+                                    style={{ touchAction: "manipulation", WebkitTapHighlightColor: "transparent" }}
                                 >
-                                    <span className={`text-[10px] uppercase tracking-[0.2em] font-bold ${t.navBtnText}`}>
+                                    <span className={`text-xs uppercase tracking-[0.2em] font-bold ${t.navBtnText} pointer-events-none`}>
                                         {activeIndex === 0 ? "Tap to Read" : "Tap for More"}
                                     </span>
-                                    <ChevronDown className={`w-4 h-4 animate-bounce ${t.navBtnIcon}`} />
+                                    <ChevronDown className={`w-4 h-4 animate-bounce ${t.navBtnIcon} pointer-events-none`} strokeWidth={2.5} />
                                 </button>
+                                <span className={`text-[7px] md:text-[9px] uppercase font-sans tracking-[0.2em] opacity-80 ${t.textMuted} pointer-events-none`}>
+                                    Or swipe to explore
+                                </span>
                             </div>
                         </div>
                     )}

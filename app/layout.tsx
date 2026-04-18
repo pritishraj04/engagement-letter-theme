@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Pinyon_Script, Montserrat, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Great_Vibes, Montserrat, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -8,7 +7,7 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500", "600", "700"],
 });
 
-const pinyon = Pinyon_Script({
+const greatVibes = Great_Vibes({
   variable: "--font-script",
   subsets: ["latin"],
   weight: "400",
@@ -27,6 +26,14 @@ const playfair = Playfair_Display({
 });
 
 
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export default function RootLayout({
   children,
@@ -36,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${pinyon.variable} ${montserrat.variable} ${playfair.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${greatVibes.variable} ${montserrat.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-stone-100 text-stone-900 overflow-hidden">{children}</body>
     </html>
